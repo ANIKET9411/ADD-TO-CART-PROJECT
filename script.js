@@ -2,11 +2,12 @@ let products = document.querySelector(".products");
 let carts = document.querySelector(".cart");
 let list = document.querySelector(".list");
 
+let cartoon=[];
 let product = [
-    { id: 1, name: "Pepsi", price: 20, Q: 0, url: "https://i.pinimg.com/originals/bb/2d/2e/bb2d2e9d59dde9f5f3785a2a896faac4.jpg" },
-    { id: 2, name: "KetchUp", price: 50, Q: 0, url: "https://www.eatthis.com/wp-content/uploads/sites/4/2019/10/heinz-tomato-ketchup.jpg" },
-    { id: 3, name: "Lays", price: 20, Q: 0, url: "https://images.heb.com/is/image/HEBGrocery/002092574?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0" },
-    { id: 4, name: "Oreo", price: 10, Q: 0, url: "https://www.eatthis.com/wp-content/uploads/sites/4/2019/10/oreo.jpg" }
+    { id: 1, name: "Pepsi", price: 20, Q: 0,condi:"false", url: "https://i.pinimg.com/originals/bb/2d/2e/bb2d2e9d59dde9f5f3785a2a896faac4.jpg" },
+    { id: 2, name: "KetchUp", price: 50, Q: 0,condi:"false", url: "https://www.eatthis.com/wp-content/uploads/sites/4/2019/10/heinz-tomato-ketchup.jpg" },
+    { id: 3, name: "Lays", price: 20, Q: 0,condi:"false", url: "https://images.heb.com/is/image/HEBGrocery/002092574?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0" },
+    { id: 4, name: "Oreo", price: 10, Q: 0,condi:"false", url: "https://www.eatthis.com/wp-content/uploads/sites/4/2019/10/oreo.jpg" }
 ];
 let cart = [];
 function increment(ids) {
@@ -14,8 +15,8 @@ function increment(ids) {
     products.innerHTML = '';
     carts.innerHTML = '';
     display();
-    cartdata(ids, "+");
-
+    cartdata("");
+    ADD();
 }
 function decrement(ids) {
     if (product[ids - 1].Q != 0) {
@@ -23,7 +24,8 @@ function decrement(ids) {
         products.innerHTML = '';
         carts.innerHTML = '';
         display();
-        cartdata(ids, "-");
+        cartdata("");
+        ADD();
     }
 }
 function increments(ids) {
@@ -31,8 +33,8 @@ function increments(ids) {
     products.innerHTML = '';
     carts.innerHTML = '';
     display();
-    cartdatas(ids, "+");
-
+    cartdata(ids);
+    ADD();
 }
 function decrements(ids) {
     if (product[ids - 1].Q != 0) {
@@ -40,7 +42,8 @@ function decrements(ids) {
         products.innerHTML = '';
         carts.innerHTML = '';
         display();
-        cartdatas(ids, "-");
+        cartdata(ids);
+        ADD("*",ids);
     }
 }
 function display() {
@@ -55,7 +58,7 @@ function display() {
     <span class="item_price">Rs.${item.price}</span>
     <span class="quantity">
     <span class="button" onclick="decrement(${item.id})">-</span> <span class="middle">${item.Q} </span><span class="button" onclick="increment(${item.id})">+</span>
-    </span><span class="colors" onclick="ADD()">ADD TO CART</span>`;
+    </span><span class="colors" onclick="ADD(${item.id},${item.Q})">ADD TO CART</span>`;
         div1.style.display = "flex";
         div1.style.justifyContent = "space-between";
         div1.style.alignItems = "center";
@@ -71,54 +74,17 @@ function display() {
         products.appendChild(div1);
     })
 }
-function cartdata(newid="", che) {
+function cartdata(newid="") {
     let h1 = document.createElement("h1");
     carts.appendChild(h1);
     h1.innerText = "CARTS";
-    if (newid == "") {
+    if(newid == "") {
         let p1 = document.createElement("p");
         carts.appendChild(p1);
         p1.innerText = "Nothing is added";
     }
-    else {
-        let prod = product.find(ele => ele.id === newid);
-        let newcart = cart.find(ele => ele.id === newid);
-        if (newcart && che == "+") {
-            newcart.Q++;
-        }
-        else if (newcart && che == "-") {
-            newcart.Q--;
-        }
-        else {
-            cart.push({ ...prod });
-        }
-        // ADD();
-    }
 }
-function cartdatas(newid="", che) {
-    let h1 = document.createElement("h1");
-    carts.appendChild(h1);
-    h1.innerText = "CARTS";
-    if (newid == "") {
-        let p1 = document.createElement("p");
-        carts.appendChild(p1);
-        p1.innerText = "Nothing is added";
-    }
-    else {
-        let prod = product.find(ele => ele.id === newid);
-        let newcart = cart.find(ele => ele.id === newid);
-        if (newcart && che == "+") {
-            newcart.Q++;
-        }
-        else if (newcart && che == "-") {
-            newcart.Q--;
-        }
-        else {
-            cart.push({ ...prod });
-        }
-        ADD();
-    }
-}
+
 let count = 0;
 list.addEventListener('click', function (operation) {
     count++;
@@ -137,15 +103,45 @@ display();
 cartdata("");
 
 
+function ADD(condition="",cun) {
+    if(cun===0)
+    {
+        alert("Enter an Quantity more than 0");
+    }
+    else{
+        console.log(condition+"con");
+    product.forEach(function(con){
+        if(condition==="*" && cun===con.id){
+            con.condi="false";
+        }
+        if(con.id===condition)
+        {
+            con.condi="true";
+            alert("Added to cart successfully");
+        }
+    });
+    console.log(product);
+    console.log(cart.length+"$");
+    product.forEach(function(con){
+        if(con.condi==="true")
+        {
+                cart.push(con);
+        }
+    });
 
-function ADD() {
+    console.log(cart);
+    console.log(cart.length+"@");
     carts.innerHTML = "";
+    
+    
     let h1 = document.createElement("h1");
     carts.appendChild(h1);
     h1.innerText = "CARTS";
-    if (cart.length > 0) {
+    console.log(cart.length+"A");
+    if (cart.length != 0) {
         cart.forEach(function (it) {
-            if (it.Q > 0) {
+            if (it.Q != 0) {
+                console.log(it.id+" (");
                 let div2 = document.createElement("div");
                 div2.innerHTML = `
             <image src="${it.url}"></image>
@@ -162,13 +158,27 @@ function ADD() {
                 div2.style.display = "flex";
                 div2.style.justifyContent = "space-between";
                 div2.style.alignItems = "center";
-                // div2.style.border="2px solid black";
                 div2.style.width = "76%";
                 div2.style.height = "80px";
                 div2.style.margin = "5%";
                 div2.style.padding = "2% 7%";
                 div2.style.textAlign = "center";
                 div2.style.boxShadow = "0 0 15px 0 white";
+            }
+            else{
+                for(let i=0;i<cart.length;i++)
+                {
+                    if(cart[i].id===it.id && it.Q===0)
+                    {
+                        cart.splice(i,1);
+                        console.log(cart.length+"aniket");
+                        if(cart.length===0){
+                        let p2=document.createElement("p");
+                        carts.appendChild(p2);
+                    p2.innerText="Nothing is added";
+                        }
+                    }
+                }
             }
         });
     }
@@ -178,37 +188,41 @@ function ADD() {
                 carts.appendChild(p2);
             p2.innerText="Nothing is added";
     }
-
-    // console.log(cart.length+"$");
     let total = cart.reduce(function (accumulator, currentvalue) {
         return accumulator + currentvalue.price * currentvalue.Q;
     }, 0);
-    list.innerHTML = `<img src="Add_to_cart.png">`;
     if (total > 0) {
         carts.innerHTML += `  <div class="total">TOTAL:  ${total}</div>`;
     }
-
+    cartoon=cart;
+    cart=[];
+    console.log(cartoon);
+    console.log(cart);
+    }
+    
 }
 
 
 function Delete(deleterow) {
-   
-    for(let i=0;i<cart.length;i++)
+    console.log(deleterow+"row");
+    
+    for(let i=0;i<cartoon.length;i++)
     {
-        if(cart[i].id===deleterow)
+        if(cartoon[i].id===deleterow)
         {
             for(let j=0;j<product.length;j++)
             {
-                if(cart[i].id===product[j].id)
+                if(cartoon[i].id===product[j].id)
+                {
                 product[j].Q = 0;
+                product[j].condi="false";
+                }
             }
-            // console.log(cart[i].id+"@");
-            cart.splice(i, 1);
-        console.log(cart.length + "$");
-        cart.innerHTML="";
-        ADD();
-        products.innerHTML = "";
+            cartoon.splice(i, 1);
+        ADD();      
+        products.innerHTML = "";    
         display();
-        }  
     }
+
+}
 }
