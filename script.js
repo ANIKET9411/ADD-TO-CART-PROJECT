@@ -86,17 +86,24 @@ function cartdata(newid="") {
 }
 
 let count = 0;
+
 list.addEventListener('click', function (operation) {
     count++;
     if (count % 2 == 0) {
+        let lent=cartoon.length;
+        console.log(lent+"^");
         products.style.display = "block";
         carts.style.display = "none";
-        list.innerHTML = `<img src="Add_to_cart.png">`;
+        if(lent>0)
+        list.innerHTML = `<img src="Add_to_cart.png"> ${lent}`;
+    else
+    list.innerHTML = `<img src="Add_to_cart.png">`;
     }
     else {
+        
         products.style.display = "none";
         carts.style.display = "inline-block";
-        list.innerHTML = `<p>&#8617;Continue Shopping</p>`;
+        list.innerHTML = `<p>&#8617;Continue Shopping</p> `;
     }
 });
 display();
@@ -104,6 +111,7 @@ cartdata("");
 
 
 function ADD(condition="",cun) {
+    
     if(cun===0)
     {
         alert("Enter an Quantity more than 0");
@@ -118,6 +126,17 @@ function ADD(condition="",cun) {
         {
             con.condi="true";
             alert("Added to cart successfully");
+            if (count % 2 == 0) {
+                let lent=cartoon.length;
+                lent++;
+                console.log(lent+"^");
+                products.style.display = "block";
+                carts.style.display = "none";
+                if(lent>0)
+                list.innerHTML = `<img src="Add_to_cart.png"> ${lent}`;
+            else
+                list.innerHTML = `<img src="Add_to_cart.png">`;
+            }
         }
     });
     console.log(product);
